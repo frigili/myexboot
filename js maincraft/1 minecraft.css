@@ -1,0 +1,114 @@
+*
+{margin: 0px;
+  padding:0px}
+
+#first{
+    max-height: 100vh;
+    max-width: 100vw;
+    position: relative;
+}
+#nav1{
+    
+}
+
+#inventorybox
+{ 
+    height: 35px;
+    width:35px;
+    
+}
+
+#fullback{
+  /* width: 100%;
+  height: 100%; */
+  border: solid black 8px;
+}
+/* background for page 1 */
+#backgro {
+    
+  background-image: url('/1\ backgruond.jpg');
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100vh;
+}
+#btnstart
+{
+  width: 150px;
+  height: 50px;
+  align-items: center;
+  position: absolute;
+  top:60%;
+  left: 40%;
+}
+
+.page
+{
+  max-height: 100vh;
+  max-width: 100vw;
+  display: grid;
+  grid-template-columns: 90% 10%;
+  
+}
+#nav2
+{
+  background: black;
+  
+  
+}
+.choos
+{
+display: block;
+margin-top: 30px;
+margin-left: auto;
+margin-right: auto;
+}
+.tools
+{border: lightblue 6px solid;}
+.choos:hover
+{border: solid 8px yellow;}
+.choosTool
+{border: red 6px solid;}
+
+.butPick
+{
+  margin-top: 60px;
+}
+#btnReSt
+{
+width: 80px;
+height: 30px;
+}
+
+/* matrix size and shade */
+.block {
+  height: 35px;
+  width: 5.8%;
+  border: 2px grey solid;
+  display: inline-block;
+}
+
+/* color of matrix */
+.matrix{
+
+}
+.world {
+  background: lightblue;
+  
+}
+.tree {
+  background-image: url("./pic/6\ green.JPG");
+}
+
+.dirt {
+  background-image: url("./pic/8\ ground.JPG");
+}
+
+.wood {
+  background-image:url("./pic/8\ odd.JPG") ;
+}
+.stone {
+  background-image: url("./pic/7\ stone.JPG");
+}
+.cloud{
+  background: white;
+}
