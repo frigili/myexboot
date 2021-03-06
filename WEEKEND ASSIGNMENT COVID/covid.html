@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <style>
+      body{
+        
+      }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+</head>
+<body>
+    <h1> Covid 19</h1>
+    <div><canvas id="myChart" maxwidth="300" maxheight="100"></canvas></div>
+    <div id=show></div>
+</body>
+<script>
+const url1 = "https://corona-api.com/countries"; //api ראשון
+const url2 = "https://api.codetabs.com/v1/proxy/?quest=https://restcountries.herokuapp.com/api/v1"
+
+  
+  // שליפת נתוני קורונה
+  let myChart;
+  let dataCovid; 
+ async function getCovadAPI() {
+  let response = await fetch(url1);
+  dataCovid = await response.json();
+  console.log(dataCovid);
+}
+getCovadAPI()
+
+// שליפת נתוני יבשות
+let APIcontinent =new Set() //מערך יבשות
+let data;
+async function getCovadGitAPI() {
+  let response = await fetch(url2);
+   data = await response.json();
+  console.log(data);   
+
+let chooseButton;
+let regCountryCho;
+let filterbyRegionbutton=function(event)
+ {
+  chooseButton=event.currentTarget.id;
+  if(chooseButton==="world")
+    {regCountryCho=dataCovid.data
+    }else
+    {regCountryCho = dataCovid.data.filter
+  (
+     function (el)
+    {
+      return el.region ===chooseButton ;
+    }
+    
+  );}
+  bulitbutton(regCountryCho)
+  bulitChart(regCountryCho)
+  }
+
+
+//  APIcontinent -arry of מדינות
+function bulitbutton (regCountryCho)
+{   
+  if(document.getElementById("mainDiv")!==null){
+  document.body.removeChild(document.getElementById("mainDiv"))
+  }
+  let mainDiv = document.createElement("DIV");
+  mainDiv.setAttribute("id", "mainDiv");
+  document.body.appendChild(mainDiv);
+
+    let creatEl=function(country){
+      let btn = document.createElement("BUTTON");
+      btn.setAttribute("id", country.name);
+    btn.innerHTML = country.name;
+    mainDiv.appendChild(btn);
+    btn.addEventListener("click",function() {resultCountry(country)});
+    }
+    
+    regCountryCho.forEach(country=>{
+    creatEl(country)})
+
+  }
+
+function bulitButtonRegin ()
+{
+  data.forEach(con => {
+      APIcontinent.add(con.region)   
+    });
+    console.log(APIcontinent);
+    
+    let creatEl=function(el){
+      let btn = document.createElement("BUTTON");
+      btn.setAttribute("id", el);
+    btn.innerHTML = el;
+    document.body.appendChild(btn);
+    btn.addEventListener("click", filterbyRegionbutton);
+    }
+    
+    APIcontinent.forEach(regionName=>{
+    creatEl(regionName)})   
+    creatEl("world")
+
+    
+  }
+  bulitButtonRegin ()
+ 
+ 
+
+  // בניית מערך דאטהכוביד הכולל גם יבשות
+
+dataCovid.data.forEach(e=>{
+  data.forEach(e2=>{
+    if (e2.cca2===e.code)
+    {
+      e.region = e2.region;
+      }
+  })
+})
+console.log(dataCovid);
+
+}
+getCovadGitAPI();
+
+function resultCountry(country)
+{
+  if (myChart!==null){myChart.destroy()}
+  if(document.getElementById("show")!==null)
+  {
+    document.getElementById("show").innerHTML=""
+  }
+  creatShow (country) 
+console.log(country.today);  
+console.log(country.latest_data);
+}
+let creatShow=function(country)
+    {
+      let boxShow1 = document.createElement("div");    
+      boxShow1.innerHTML = "new deaths:\n"+country.today.deaths;
+      show.appendChild(boxShow1);    
+      
+      let boxShow2 = document.createElement("div");    
+      boxShow2.innerHTML = "new cases:\n "+country.today.confirmed;
+      show.appendChild(boxShow2);
+
+      let boxShow3 = document.createElement("div");    
+      boxShow3.innerHTML = "Total confirmed:\n"+country.latest_data.confirmed;
+      show.appendChild(boxShow3);
+
+      let boxShow4 = document.createElement("div");    
+      boxShow4.innerHTML = "Total critical:\n "+country.latest_data.confirmed;
+      show.appendChild(boxShow4);
+
+      let boxShow5 = document.createElement("div");    
+      boxShow5.innerHTML = "Total deaths:\n"+country.latest_data.deaths;
+      show.appendChild(boxShow5);
+
+      let boxShow6 = document.createElement("div");    
+      boxShow6.innerHTML = "Total recovered:\n"+country.latest_data.recovered;
+      show.appendChild(boxShow6);
+    }
+
+
+function bulitChart(regCountryCho)
+{
+  if(document.getElementById("show")!==null)
+  {
+    document.getElementById("show").innerHTML=""
+  }
+  let arrCountry=regCountryCho.map(function(item) {
+  return item.name;
+});
+
+let arrCondtion=regCountryCho.map(function(item) {
+  return item.latest_data.deaths;
+});
+  
+  let ctx = document.getElementById("myChart");
+  myChart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: arrCountry,
+    datasets: [
+      { 
+        data: arrCondtion,
+        label: "deaths",
+        borderColor: "#3e95cd",
+      }
+    ]
+  }
+});}
+</script>
+</html>
