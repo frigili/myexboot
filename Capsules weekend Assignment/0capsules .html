@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootcamp capsules</title>
+    <style>
+      td
+      {
+        border: solid grey 3px;
+      }
+      bottom
+      {
+        
+      };
+    </style>
+</head>
+<body>
+<h1>Itay’s group</h1>
+<div id="container"></div>
+<div></div>
+
+<script>
+
+const baseEndpoint = "https://appleseed-wa.herokuapp.com/api/users/";
+const container = document.querySelector("#container");
+
+const getUsers = async () => {
+  let callApi = await fetch(baseEndpoint);
+  let data = await callApi.json();
+
+  // let users = await Promise.all(
+  //   data.results.map(async (u) => {
+  //     let more = await getWorld(u.homeworld);
+  //     return {
+  //       name: u.name,
+  //       hair: u.hair_color,
+  //       height: u.height,
+  //       worldName: more.name,
+  //     };
+  //   })
+  // );
+  // console.log(users);
+
+  let usersList = [];
+  for (let i = 0; i < data.length; i++) {    
+    let more = await getMore(data[i].id);
+    usersList.push({
+      id: data[i].id,
+      firstName: data[i].firstName,
+      lastName: data[i].lastName,
+      capsule: data[i].capsule,
+      age: more.age,
+      city: more.city,
+      gender: more.gender,
+      hobby: more.hobby,
+    });
+  }
+
+  return usersList;
+};
+async function getMore(i) {
+      let more = await fetch(baseEndpoint+i);
+      return await more.json();
+    }
+
+async function createTable() {
+  let users = await getUsers();
+  let table = document.createElement("table");
+  table.innerHTML += `<tr>
+      <th>id</th>
+             <th>FirstName</th>
+              <th>LastName</th>
+               <th>Capsule Number</th>
+               <th>Age</th>
+               <th>City</th>
+               <th>Gender</th>
+               <th>Hobby</th>
+                </tr>`;
+
+  users.forEach((u) => {
+    console.log(u);    
+    table.innerHTML += `<tr id=${u.id} contenteditable="false">
+            <td contenteditable="false">${u.id}</td>
+             <td id="firstN${u.id}" data-orig="${u.firstName}">${u.firstName}</td>
+              <td id="lastN${u.id}" data-orig="${u.lastName}">${u.lastName}</td>
+               <td id="capsule${u.id}" data-orig="${u.capsule}">${u.capsule}</td>
+               <td id="age${u.id}" data-orig="${u.age}">${u.age}</td>
+               <td id="city${u.id}" data-orig="${u.city}">${u.city}</td>
+               <td id="gender${u.id}" data-orig="${u.gender}">${u.gender}</td>
+               <td id="hobby${u.id}" data-orig="${u.hobby}">${u.hobby}</td>
+               <td ><button onclick="butEditOrCancel(${u.id})" id=eC${u.id} contenteditable="false">Edit</button></td>
+               <td><button onclick="butDeleteOrConfirm(${u.id})" id=dC${u.id} contenteditable="false">Delete</button></td>
+                </tr>`;
+  });
+  container.appendChild(table);
+}
+
+createTable();
+
+function butEditOrCancel(id)
+{
+// ישתנה מפאלס לטרו
+  if(document.getElementById(id).contentEditable==="false")
+  {
+  document.getElementById(id).contentEditable ="true";
+
+  // הכפתורים ישתנו לקאנסל וקונפירם
+  document.getElementById("dC"+id).innerHTML="Confirm";
+  document.getElementById("eC"+id).innerHTML="Cancel";
+
+  // הכפתורים ישתנו לקאנסל וקונפירם
+  document.getElementById("dC"+id).classList.add("Confirm")
+  document.getElementById("eC"+id).classList.add("Cancel")
+  }
+  else
+  {
+    // להחזיר את הטקסט הראשוני
+   for (let i=1 ; i<8; i++)
+   {
+     document.getElementById(id).children[i].innerHTML=document.getElementById(id).children[i].dataset.orig
+   }
+    document.getElementById(id).contentEditable ="false";
+    document.getElementById("dC"+id).innerHTML="Delete";
+    document.getElementById("eC"+id).innerHTML="Edit";
+  document.getElementById("dC"+id).classList.remove("Confirm")
+  document.getElementById("eC"+id).classList.remove("Cancel")
+  }
+}
+  function butDeleteOrConfirm(id)
+{
+  if(document.getElementById(id).contentEditable==="true")
+  {
+    // להחזיר את הטקסט הראשוני
+   for (let i=1 ; i<8; i++)
+   {
+     document.getElementById(id).children[i].dataset.orig=document.getElementById(id).children[i].innerHTML
+   }
+   document.getElementById("dC"+id).innerHTML="Delete";
+    document.getElementById("eC"+id).innerHTML="Edit";
+  }
+  else
+  document.getElementById(id).remove()
+}
+</script>    
+</body>
+</html>
